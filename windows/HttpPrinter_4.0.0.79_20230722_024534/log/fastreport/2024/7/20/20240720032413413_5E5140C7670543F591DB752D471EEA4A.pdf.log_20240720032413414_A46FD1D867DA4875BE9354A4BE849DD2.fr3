@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<TfrxReport Version="5.6.1" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="预设" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="43660.4712520949" ReportOptions.Description.Text="" ReportOptions.LastChange="45488.233235787" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end.">
+  <Datasets>
+    <item DataSet="AfrxDBDataset" DataSetName="A"/>
+    <item DataSet="BfrxDBDataset" DataSetName="B"/>
+  </Datasets>
+  <TfrxDataPage Name="Data" Height="1000" Left="0" Top="0" Width="1000"/>
+  <TfrxReportPage Name="Page1" PaperWidth="75" PaperHeight="297" PaperSize="256" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+    <TfrxReportTitle Name="ReportTitle1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Font.Charset="134" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Height="207.87415" Left="0" ParentFont="False" Top="18.89765" Width="207.87415">
+      <TfrxMemoView Name="Memo2" Left="11.33859" Top="120.94496" Width="192.75603" Height="18.89765" DataField="czy" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="134" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="[A.&#34;czy&#34;]"/>
+      <TfrxMemoView Name="Memo7" Left="11.33859" Top="0" Width="192.75603" Height="18.89765" DataField="title" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="134" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="1" ParentFont="False" Text="[A.&#34;title&#34;]"/>
+      <TfrxMemoView Name="AsubTitle" Left="11.33859" Top="30.23624" Width="192.75603" Height="18.89765" DataField="subTitle" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="134" Font.Color="-16777208" Font.Height="-11" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="[A.&#34;subTitle&#34;]"/>
+      <TfrxMemoView Name="Adeskname" Left="11.33859" Top="60.47248" Width="192.75603" Height="18.89765" DataField="deskname" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="134" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="[A.&#34;deskname&#34;]"/>
+      <TfrxMemoView Name="Memo8" Left="11.33859" Top="90.70872" Width="192.75603" Height="18.89765" DataField="djh" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="[A.&#34;djh&#34;]"/>
+      <TfrxMemoView Name="Astarttime" Left="11.33859" Top="147.40167" Width="192.75603" Height="18.89765" DataField="starttime" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="134" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="[A.&#34;starttime&#34;]"/>
+      <TfrxMemoView Name="Memo9" Left="11.33859" Top="177.19697" Width="192.75603" Height="18.89765" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="134" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" HAlign="haRight" ParentFont="False" Text="[A.&#34;tf&#34;]"/>
+    </TfrxReportTitle>
+    <TfrxMasterData Name="MasterData1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Font.Charset="134" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Height="41.57483" Left="0" ParentFont="False" Top="332.59864" Width="207.87415" ColumnWidth="0" ColumnGap="0" DataSet="BfrxDBDataset" DataSetName="B" RowCount="0" Stretched="True">
+      <TfrxMemoView Name="Bshangpname1" Left="90.70872" Top="3.77953" Width="49.13389" Height="18.89765" DataField="shuliang" DataSet="BfrxDBDataset" DataSetName="B" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="[B.&#34;shuliang&#34;]"/>
+      <TfrxMemoView Name="Memo3" Left="151.1812" Top="7.55906" Width="52.91342" Height="18.89765" DataField="je" DataSet="BfrxDBDataset" DataSetName="B" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="[B.&#34;je&#34;]"/>
+      <TfrxMemoView Name="Bshangpname2" Left="11.33859" Top="7.55906" Width="71.81107" Height="18.89765" DataField="shangpname" DataSet="BfrxDBDataset" DataSetName="B" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="[B.&#34;shangpname&#34;]"/>
+    </TfrxMasterData>
+    <TfrxHeader Name="Header1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Font.Charset="134" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Height="22.67718" Left="0" ParentFont="False" Top="287.24428" Width="207.87415">
+      <TfrxMemoView Name="Memo4" Left="11.33859" Top="0" Width="71.81107" Height="18.89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="商品名称"/>
+      <TfrxMemoView Name="Memo5" Left="90.70872" Top="0" Width="49.13389" Height="18.89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="数量"/>
+      <TfrxMemoView Name="Memo6" Left="151.1812" Top="0" Width="52.91342" Height="18.89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="金额"/>
+    </TfrxHeader>
+    <TfrxFooter Name="Footer1" FillType="ftBrush" FillGap.Top="0" FillGap.Left="0" FillGap.Bottom="0" FillGap.Right="0" Font.Charset="134" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Height="204.09462" Left="0" ParentFont="False" Top="396.85065" Width="207.87415">
+      <TfrxMemoView Name="Memo10" Left="4.55906" Top="3.77953" Width="200.31509" Height="18.89765" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="应收金额：[A.&#34;ysje&#34;]"/>
+      <TfrxMemoView Name="Memo11" Left="4.55906" Top="30.23624" Width="200.31509" Height="18.89765" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="134" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="已优惠金额：[A.&#34;yhje&#34;]"/>
+      <TfrxMemoView Name="Memo12" Left="4.55906" Top="52.91342" Width="200.31509" Height="18.89765" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="实结金额：[A.&#34;sjje&#34;]"/>
+      <TfrxMemoView Name="Memo13" Left="4.55906" Top="104.82684" Width="200.31509" Height="18.89765" DataSet="AfrxDBDataset" DataSetName="A" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" ParentFont="False" Text="消费卡号：[A.&#34;kahao&#34;]"/>
+      <TfrxMemoView Name="FormatDateTime" Left="1.55906" Top="80.14966" Width="200.31509" Height="18.89765" Font.Charset="1" Font.Color="-16777208" Font.Height="-13" Font.Name="宋体" Font.Style="0" HAlign="haRight" ParentFont="False" Text="打单日期：[FormatDateTime('yyyy-mm-dd hh:mm:ss',now)]"/>
+    </TfrxFooter>
+  </TfrxReportPage>
+</TfrxReport>

@@ -1,0 +1,113 @@
+　　　　　　　　　　　　　　　　　    HttpPrinter (网页打印插件)
+
+公司:山东易桥智能科技有限公司
+网站:http://www.HttpPrinter.com
+电话:0537-2345660 13165191728
+邮箱:46140262@qq.com
+
+HttpPrinter® 商标和著作权所有者为山东易桥智能科技有限公司。
+
+HttpPrinter的源码版权控制很简单,购买源码后,您可以私下交流,但不可以公布于网络!
+
+本软件无任何功能限制,例如 设计报表,报表路径,客户端连接数,导出pdf,jpg文件,设置偏移值 等.
+
+如果您需要,定制功能,设计报表,OEM,购买源码等,请于本公司联系.
+
+HttpPrinter QQ交流群 230518187  本群里面会定期举行源码团购活动,一般为 五一,十一,中秋节,春节.
+
+HttpPrinter下载地址:
+http://www.HttpPrinter.com/download.html
+
+
+
+本软件 您可以免费使用,如果您需要 设计报表模板 , 定制功能, 提供技术指导 ,请联系作者!
+
+一、概述：
+  常用的报表打印的方法包括:	
+  1.使用activex打印 但是 只能用在IE中,然而微软已经放弃了IE,chrome一家独大,新版的EDGE都用chrome开源内核了.
+  2.生成pdf打印  但是 效率 和 打印效果有限制.你批量打印数据试试,不累死你,生成一个pdf,自己点击打印一次.
+  3.用js 传递数据 给 报表服务器,可兼容各种浏览器.
+  4.安卓 IOS 自定打印机打印,或者用打印机接口打印.
+  
+  这么多的打印,能不能统一起来. 这就是 我们现在用的 HttpPrinter,通过 Http通讯,打印机服务器端设置好模板格式,把数据发送给服务器即可.
+
+二、特点：
+1、无插件,主要一句js即可；
+2、拖拽即可完成设计,支持 gridreport(锐浪报表), fastreport, reportmachine ； 
+3、强大的报表功能,管它什么报表, 交叉的,嵌套的,还是二维码,图片等等,都支持；
+4、打印机：只要是能用的打印机,都支持,针式打印机、激光打印机、小票打印机,证卡打印机等等,都不在话下,而且当有多个打印机时可以指定打印机；
+5、支持各种语言,java php js delphi python ios andriod firemonkey unigui C# 等等,提供Http通讯的语言都支持；
+6、可作为pdf服务器使用,js调用生成的pdf文档即可打印；
+7、支持web拍照；
+8、支持web读取身份证设备信息(神思、普天、新中新、精伦)；
+9、支持广域网打印；
+10、支持自定义导出的文件名称exportfilename；
+
+
+三、使用前提条件：
+1、在进行打印前，需要先设计好打印报表
+2、打印数据必须Json的格式发送给打印服务器，并且数据必须满足指定的格式（见下文）；
+
+四、数据格式说明：
+下面以一个 报表数据 为例说明一下数据格式;
+
+图片格式: 1.本地地址 2.url地址 3.base64格式
+
+//url地址 必须http或者https开头,HttpPrinter后台会下载该图片的,请保证该地址可以下载
+var imgurl = "http://b-ssl.duitang.com/uploads/item/201509/25/20150925110828_iMnGx.jpeg"; 
+
+//本地地址
+//var imgurl = "D:/demo.jpeg";   //本地地址  注意是 正斜杠 / , 不是 反斜杠 \ 
+
+//base64格式
+//var imgurl = "/9j/4AAQSkZJRgAACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA/9k="; 
+
+{
+  	  "ReportType": "gridreport",     /*报表类型  支持 gridreport  fastreport  为空 默认 gridreport*/
+  	  "ReportName": "test.grf",     /*报表文件名 需要以英文字母开头*/
+	  "ReportVersion": 1,              /*可选。报表版本, 为空则默认1  如果本地报表的版本过低 将从 ReportUrl 地址进行下载更新*/
+	  "ReportUrl": "http://111.67.202.157:9099/report/test.grf",                  /*可选。为空 将不更新本地报表 , 如果本地报表不存在可以从该地址自动下载*/
+	  "Copies": 1,                  /*可选。打印份数，支持指定打印份数。默认1份,如果为零,不打印,只返回报表生成的pdf,jpg等文件*/
+	  "PrinterName": "",      /*可选。指定打印机，为空的话 使用默认打印机, 请在 控制面板 -> 设备和打印机 中查看您的打印机的名称 */
+	  "PrintOffsetX": 0,                 /*可选。打印右偏移，单位厘米。报表的水平方向上的偏移量，向右为正，向左为负。*/
+	  "PrintOffsetY": 0,                /*可选。打印下偏移，单位厘米。 报表的垂直方向上的偏移量，向下为正，向上为负。*/
+	  "Preview": 0,                 /*可选。是否预览，和主界面设置的效果一样 为空默认不预览,   0：不预览，1：预览(弹出导出的pdf,jpg等文件)。*/
+	  "token": "aa",      /*可选。只要token值在列表中 方可打印
+	  "taskId": "1234567",     /*可选。多个打印任务同时打印时，根据该id确定返回的是哪个打印任务。 */ 
+      "exportfilename": "",      /*可选。自定义 导出 文件名称 例如 test  会 导出 http://127.0.0.1:12345/gridreport/test.pdf   格式为 ip+port+报表类型+名称+文件类型      */ 
+
+	  "Control": '['  ///*部件框，可选值：AsStaticBox ,AsMemoBox,AsRichTextBox,AsPictureBox (base64格式),AsBarcode*/
+		+'{"type": "AsStaticBox", "name": "姓名","value": "高文杰","required": false},'
+		+'{"type": "AsStaticBox", "name": "性别","value": "男","required": false},'
+		+'{"type": "AsStaticBox", "name": "电话","value": "13165191728","required": false},'
+		+'{"type": "AsBarcode", "name": "二维码","value": "5520002701774727","required": false},'
+		+'{"type": "AsPictureBox", "name": "图片","value": "'+imgurl+'","required": false},'  //base64格式,或者url格式
+		+']'),
+	  
+	  "Parameter": '['  ///*参数，type 默认为空即可,已经在报表端设置了 备用字段  
+		+'{"type": "", "name": "单号","value": "5520002701774727","required": false},'
+		+'{"type": "", "name": "日期","value": "2019-09-09 12:21:12","required": false},'
+		+'{"type": "", "name": "year","value": "2018","required": false},'
+		+']'),
+		
+	  "Field": '['  ///*字段， type ftBlob (base64格式) ,ftString ftInteger ftBoolean, ftFloat, ftCurrency,ftDateTime,  size (ftString 设置为实际长度,其他的设置为0,例如 ftInteger ftBlob 等设置为0 ) 
+		+'{"type": "ftString", "name": "快递单号","size": 255,"required": true},'
+		+'{"type": "ftString", "name": "发件人","size": 255,"required": false},'
+		+'{"type": "ftString", "name": "发件人电话","size": 255,"required": false},'
+		+'{"type": "ftBlob", "name": "图像","size": 0,"required": false},'
+		+']'),
+
+	  "Data": '['  ///*数据行  
+		+'{"快递单号": "1234567890", "发件人": "山东易桥智能科技有限公司","发件人电话": "13165191728","图像": "'+imgurl+'"},'
+		+'{"快递单号": "1234567890", "发件人": "山东易桥智能科技有限公司","发件人电话": "13165191728","图像": "'+imgurl+'"},'
+		+'{"快递单号": "1234567890", "发件人": "山东易桥智能科技有限公司","发件人电话": "13165191728","图像": "'+imgurl+'"},'
+		+'{"快递单号": "1234567890", "发件人": "山东易桥智能科技有限公司","发件人电话": "13165191728","图像": "'+imgurl+'"},'
+		+'{"快递单号": "1234567890", "发件人": "山东易桥智能科技有限公司","发件人电话": "13165191728","图像": "'+imgurl+'"},'
+		+']'),
+}
+
+-------------
+
+成功返回 {"status":"ok","data":"报表地址"}， 失败返回 {"status":"error","data":"具体的错误信息"}
+
+
