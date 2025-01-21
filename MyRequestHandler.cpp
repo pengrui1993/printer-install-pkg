@@ -7,6 +7,7 @@
 #include<QtSerialPort/QSerialPortInfo>
 #include<QtPrintSupport/QPrinterInfo>
 #include<QPainter>
+#include<algorithm>
 MyRequestHandler::MyRequestHandler(QObject* parent)
     : HttpRequestHandler(parent) {
     // empty
@@ -17,7 +18,13 @@ static void handlePrinterRequest(MyRequestHandler& handler
                                  ,HttpResponse&rsp){
 
 
-    rsp.setHeader("Content-Type","application/json;charset=utf-8");
+//    rsp.setHeader("Content-Type","application/json;charset=utf-8");
+    rsp.setHeader("Content-Type","text/plain;charset=utf-8");
+    rsp.setHeader("Access-Control-Allow-Origin","*");
+    rsp.setHeader("Access-Control-Allow-Headers","*");
+    rsp.setHeader("Access-Control-Allow-Methods","*");
+    //
+    rsp.setStatus(200);
     if(root["method"].isNull()){
         QJsonObject obj;
         obj["status"] = "error";
@@ -26,8 +33,8 @@ static void handlePrinterRequest(MyRequestHandler& handler
         rsp.write(doc.toJson(),true);
         return;
     }
-    const auto method = root["method"].toString();
 
+    const auto method = root["method"].toString();
     if(method=="getprinterlist"){
         //{status:'ok',data:[{name:''},{name:''}]}
         QJsonObject obj;
@@ -40,20 +47,49 @@ static void handlePrinterRequest(MyRequestHandler& handler
         obj["status"] = "ok";
         obj["data"] = data;
         QJsonDocument doc(obj);
-        rsp.write(doc.toJson(),true);
-    }else if(method=="printreport"){
-        auto info = QPrinterInfo::availablePrinters()[0];
-        QPrinter printer(info);
-        //TODO
-        if(info.printerName().startsWith("POS58 Printe")){
-            QPainter p;
-            if(p.begin(&printer)){
+        const auto bytes = doc.toJson(QJsonDocument::Compact);
 
-                p.drawText(10,10,"123");
-                p.end();
-            }
+        rsp.write( bytes,true);
+    }else if(method=="printreport"){
+        qDebug() << root;
+
+        auto printerName = root["PrinterName"];//
+        if(printerName.isNull()){
+            QJsonObject obj;
+            obj["status"] = "error";
+            obj["data"] = "PrinterName 不能为 null";
+            QJsonDocument doc(obj);
+            rsp.write(doc.toJson(),true);
+            return;
         }
 
+        auto infos = QPrinterInfo::availablePrinters();
+        auto itr = std::find_if(infos.begin(),infos.end(),[=](QPrinterInfo& info){
+            return info.printerName()==printerName.toString();
+        });
+        if(itr==infos.end()){
+            QJsonObject obj;
+            obj["status"] = "error";
+            obj["data"] = "PrinterName 打印设备"+printerName.toString();
+            QJsonDocument doc(obj);
+            rsp.write(doc.toJson(),true);
+            return;
+        }
+        qDebug()<<"打印设备名：" <<printerName;
+
+        auto& info = *itr;
+        QPrinter printer(info,QPrinter::HighResolution);
+        QPainter p;
+        if(p.begin(&printer)){
+            p.drawText(10,10,"测试");
+            p.end();
+        }
+        auto templateName = root["ReportName"];//TODO
+        QJsonObject obj;
+        obj["status"] = "ok";
+        obj["data"] = "测试完毕";
+        QJsonDocument doc(obj);
+        rsp.write(doc.toJson(),true);
     }else{
         //{"status":"error","taskid":"","data":"该method=不支持"}
         QJsonObject obj;
@@ -62,6 +98,8 @@ static void handlePrinterRequest(MyRequestHandler& handler
         QJsonDocument doc(obj);
         rsp.write(doc.toJson(),true);
     }
+
+
 
 }
 void MyRequestHandler::service(HttpRequest &request, HttpResponse &response) {
