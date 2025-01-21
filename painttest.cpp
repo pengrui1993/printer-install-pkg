@@ -5,7 +5,38 @@
 #include<QPushButton>
 #include<QRect>
 #include<QApplication>
- int testPaint(QApplication& app){
+#include<QList>
+#include<QMap>
+#include<QString>
+#include<QColor>
+#include<QJsonDocument>
+#include<QJsonObject>
+#include<QDebug>
+namespace{
+
+}
+static int testJson(){
+    QString json(R"(
+{
+    "AField":[{"name":"id"},{"name":"color"}]
+    ,"AData":[{
+        "id": 1
+        ,"color": 123456
+    },{
+        "id": 2
+        ,"color": 432123
+    }]
+}
+)");
+    QJsonDocument d = QJsonDocument::fromJson(json.toUtf8());
+    auto obj = d.object();
+    qDebug()<< obj["AField"];
+}
+
+int testEtc(QApplication& app){
+    return testJson();
+}
+int testPaint(QApplication& app){
     // 创建一个 QImage 对象，指定大小和格式
     QImage image(400, 300, QImage::Format_ARGB32);
     image.fill(Qt::white); // 使用白色填充背景
