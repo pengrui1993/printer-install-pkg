@@ -8,6 +8,7 @@ class MyRequestHandler : public HttpRequestHandler {
 public:
     MyRequestHandler(QObject* parent=0);
     void service(HttpRequest& request, HttpResponse& response);
+
 };
 
 #endif // MYREQUESTHANDLER_H
