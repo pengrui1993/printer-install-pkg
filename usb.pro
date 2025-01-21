@@ -22,12 +22,14 @@ SOURCES += \
     httpserver/httpsession.cpp \
     httpserver/httpsessionstore.cpp \
     httpserver/staticfilecontroller.cpp \
+    loghandler.cpp \
     main.cpp \
     mainwindow.cpp \
     xml.cpp
 
 HEADERS += \
     MyRequestHandler.h \
+    fr3xml.h \
     httpserver/httpconnectionhandler.h \
     httpserver/httpconnectionhandlerpool.h \
     httpserver/httpcookie.h \

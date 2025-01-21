@@ -13,6 +13,7 @@
 #include<QPoint>
 #include<QByteArray>
 #include<QBuffer>
+#include<QDir>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),setting("cfg.ini")
@@ -34,6 +35,21 @@ MainWindow::MainWindow(QWidget *parent)
     setting.setValue("listener/maxMultiPartSize","10000000");
     setting.sync();
     //initDoc(setting);
+    QFile prepare = QFile("template/AAAPosTicket.fr3");
+    if(!prepare.exists()){
+        QDir dir;
+        if(!dir.exists("template")){
+            dir.mkdir("template");
+        }
+        QFile file(":/template/AAAPosTicket.fr3");
+        const auto res = file.open(QIODevice::ReadOnly);
+        if(res){
+            prepare.open(QFile::WriteOnly);
+            prepare.write(file.readAll());
+            prepare.close();
+        }
+        file.close();
+    }
 
 
 }

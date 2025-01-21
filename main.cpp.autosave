@@ -5,16 +5,14 @@
 //https://www.bytezonex.com/archives/mPvrYPwT.html
 
 extern bool testEtc();
-extern bool xmlTest();
-extern bool testPainter();
+
 extern void customMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     qInstallMessageHandler(customMessageHandler);
-    if(testPainter())return 0;
-    if(xmlTest())return 0;
+    if(testEtc())return 0;
     MainWindow w;
     w.show();
     return a.exec();
