@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>template/AAAPosTicket.fr3</file>
+        <file>images/img1.png</file>
+    </qresource>
+</RCC>

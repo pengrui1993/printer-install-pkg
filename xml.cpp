@@ -2,9 +2,26 @@
 #include <QXmlStreamReader>
 #include <iostream>
 #include <QString>
-static void xmlTest(){
-    const auto filepath = QString("/tmp/AAAPosTicket.fr3");
-    QFile file(filepath);
+#include <QDebug>
+#include <QFont>
+namespace {
+struct Item{
+    QString tagName;//TfrxHeader|TfrxFooter |TfrxMemoView
+
+    QString fontName;
+    qint32 fontColor;
+    qreal fontHeight;
+
+    qreal left;
+    qreal top;
+    qreal width;
+    qreal height;
+};
+
+}
+void xmlTest(){
+
+    QFile file(":/template/AAAPosTicket.fr3");
     const auto res = file.open(QIODevice::ReadOnly);
     if(!res){
         qDebug() << "open file error:" << file.fileName();
@@ -31,16 +48,20 @@ static void xmlTest(){
         case QXmlStreamReader::StartElement:{
             auto eleName = xml.name();
             deep++;
+            qDebug() << "TAG:" << eleName;
             auto attrs = xml.attributes();
             for(const auto& attr:attrs){
-                std::cerr << attr.name().toString().toStdString() <<":" << attr.value().toString().toStdString() << " ";
+                const auto key = attr.name().toString();
+                const auto value = attr.value().toString();
+                qDebug() << key <<":" << value << " ";
             }
-            std::cerr << std::endl;
+
         }break;
         case QXmlStreamReader::EndElement:{
             auto eleName = xml.name().toString();
             //qDebug() <<eleName.trimmed();
             deep--;
+            qDebug();
         }break;
         case QXmlStreamReader::Characters:{
 

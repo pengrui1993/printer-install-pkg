@@ -23,7 +23,8 @@ SOURCES += \
     httpserver/httpsessionstore.cpp \
     httpserver/staticfilecontroller.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    xml.cpp
 
 HEADERS += \
     MyRequestHandler.h \
@@ -50,3 +51,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     httpserver/httpserver.pri
+
+RESOURCES += \
+    res.qrc
