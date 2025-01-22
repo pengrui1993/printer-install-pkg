@@ -14,6 +14,9 @@
 #include<QByteArray>
 #include<QBuffer>
 #include<QDir>
+#include<QMessageBox>
+#include <QTcpSocket>
+#include<QAbstractSocket>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),setting("cfg.ini")
@@ -51,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
         file.close();
     }
 
-
+    on_pushButton_clicked();
 }
 
 MainWindow::~MainWindow()
@@ -161,6 +164,13 @@ void MainWindow::on_pushButton_2_clicked()
 {
     testPrint();
 }
+static bool isPortInUse(int port) {
+    QTcpSocket socket;
+    bool bounded = socket.bind(QHostAddress::Any,port);
+
+    socket.close();
+    return !bounded;
+}
 void MainWindow::on_pushButton_clicked()
 {
     for(const auto& info:QSerialPortInfo::QSerialPortInfo::availablePorts()){
@@ -175,18 +185,26 @@ void MainWindow::on_pushButton_clicked()
     }
     if(!started){
         bool isInt;
-        ui->lineEdit->text().toInt(&isInt);
+        auto port = ui->lineEdit->text().toInt(&isInt);
         if(isInt){
-
-            started = true;
-            ui->lineEdit->setDisabled(true);
-            ui->pushButton->setText("关闭");
             setting.setValue("listener/port",ui->lineEdit->text());
             setting.sync();
             setting.beginGroup("listener");
-            handler = new MyRequestHandler(QMainWindow::parent());
-            listener = new stefanfrings::HttpListener(&setting,handler);
-
+            if(!isPortInUse(port)){
+                handler = new MyRequestHandler(QMainWindow::parent());
+                listener = new stefanfrings::HttpListener(&setting,handler);
+                if(listener->isListening()){
+                    started = true;
+                    ui->lineEdit->setDisabled(true);
+                    ui->pushButton->setText("关闭");
+                }else{
+                    delete handler;
+                    delete listener;
+                    QMessageBox::information(this,"title","端口已占用1");
+                }
+            }else{
+                QMessageBox::information(this,"title","端口已占用2");
+            }
         }
     }else if(started){
         started = false;

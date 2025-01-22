@@ -12,10 +12,21 @@
 #include<QColor>
 #include<QJsonDocument>
 #include<QJsonObject>
-#include<QDebug>
-#include<QRect>
 #include<QHash>
 #include<QPair>
+#include<QtPrintSupport/QPrinterInfo>
+#include<QFont>
+#include<QLineF>
+#include<QDebug>
+#include<QBrush>
+#include<QPen>
+
+#include<QPoint>
+#include<QByteArray>
+#include<QBuffer>
+#include<QDir>
+#include<QRegularExpressionMatch>
+#include<QRegularExpression>
 namespace{
 
 using NodeIdSet = QSet<qint64>;
@@ -71,7 +82,7 @@ void calc(){
 
 
 }
-static int testJson(){
+static bool testJson(){
     QString json(R"(
 {
     "AField":[{"name":"id"},{"name":"color"}]
@@ -87,11 +98,12 @@ static int testJson(){
     QJsonDocument d = QJsonDocument::fromJson(json.toUtf8());
     auto obj = d.object();
     qDebug()<< obj["AField"];
+    return false;
 }
 
-int testEtc(QApplication& app){
-    return testJson();
-}
+
+
+
 int testPaint(QApplication& app){
     // 创建一个 QImage 对象，指定大小和格式
     //QImage image(400, 300, QImage::Format_ARGB32);
@@ -120,4 +132,60 @@ int testPaint(QApplication& app){
     label.setPixmap(QPixmap::fromImage(image));
     label.show();
     return app.exec();
+}
+//POS58 Printer
+int testPaint2(QApplication& app){
+    // 创建一个 QImage 对象，指定大小和格式
+    //QImage image(400, 300, QImage::Format_ARGB32);
+    QImage image(200,100,QImage::Format_Grayscale8);
+    image.fill(Qt::white); // 使用白色填充背景
+    // 创建一个 QPainter 对象，并绑定到 QImage 上
+    QPainter painter(&image);
+    auto f = painter.font();
+    f.setBold(true);
+    f.setPixelSize(20);
+    painter.setFont(f);
+    painter.drawText(80, 20, "abcdABCD你好!");
+
+    // 完成绘制并释放 QPainter
+    painter.end();
+    for(auto& info :QPrinterInfo::availablePrinters() ){
+        //break;
+        if(info.printerName().startsWith("POS58 Printe")){
+            QPrinter printer(info,QPrinter::HighResolution);
+            QPainter p;
+            p.setRenderHint(QPainter::Antialiasing);
+            if(p.begin(&printer)){
+                p.drawImage(QPoint(0,0),image);
+                p.end();
+            }
+
+        }
+    }
+
+    // 显示 QImage 内容到一个 QLabel 上
+    QLabel label;
+    label.setPixmap(QPixmap::fromImage(image));
+    label.show();
+    app.exec();
+    return true;
+}
+static constexpr const bool yesQuit = true;
+bool testReg(){
+    QString text = "打单日期：[FormatDateTime('yyyy-mm-dd hh:mm:ss',now)]";
+    QRegularExpression  regExp("\\[FormatDateTime\\('([ydhms\\- :]+)',(\\S+)\\)\\]");
+    auto m = regExp.globalMatch(text);
+    if(m.hasNext()){
+        auto matcher = m.next();
+        qDebug()<< matcher.captured(1);
+    }
+    QRegExp reg("\\[FormatDateTime\\('([ydhms]+)',(\\S+)\\)\\]");
+
+
+    return !yesQuit;
+}
+bool testEtc(QApplication& app){
+    //return testPaint2(app);
+    //return testJson();
+    return testReg();
 }
