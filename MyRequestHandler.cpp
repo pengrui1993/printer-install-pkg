@@ -104,8 +104,8 @@ static void doUsePrinter(QPrinterInfo& info
             if(!dataHasField)continue;
             if(painter.begin(&printer)){
                 painter.drawText(
-                            QRect(p->attris["Top"].toDouble()
-                                ,p->attris["Left"].toDouble()
+                            QRect(p->attris["Left"].toDouble()
+                                ,p->attris["Top"].toDouble()
                                 ,p->attris["Width"].toDouble()
                                 ,p->attris["Height"].toDouble()
                             )
@@ -122,8 +122,8 @@ static void doUsePrinter(QPrinterInfo& info
         auto text = p->attris["Text"];//商品名称
         painter.drawText(
                     QRect(
-                        p->attris["Top"].toDouble()
-                        ,p->attris["Left"].toDouble()
+                        p->attris["Left"].toDouble()
+                        ,p->attris["Top"].toDouble()
                         ,p->attris["Width"].toDouble()
                         ,p->attris["Height"].toDouble()
                     )
@@ -165,8 +165,8 @@ static void doUsePrinter(QPrinterInfo& info
                     }
                     painter.drawText(
                                 QRect(
-                                    p->attris["Top"].toDouble()
-                                    ,p->attris["Left"].toDouble()
+                                    p->attris["Left"].toDouble()
+                                    ,p->attris["Top"].toDouble()
                                     ,p->attris["Width"].toDouble()
                                     ,p->attris["Height"].toDouble()
                                 )
@@ -219,8 +219,8 @@ static void doUsePrinter(QPrinterInfo& info
             if(painter.begin(&printer)){
                 painter.drawText(
                             QRect(
-                                p->attris["Top"].toDouble()
-                                ,p->attris["Left"].toDouble()
+                                p->attris["Left"].toDouble()
+                                ,p->attris["Top"].toDouble()
                                 ,p->attris["Width"].toDouble()
                                 ,p->attris["Height"].toDouble()
                             )
