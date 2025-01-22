@@ -6,13 +6,69 @@
 #include<QRect>
 #include<QApplication>
 #include<QList>
+#include<QSet>
 #include<QMap>
 #include<QString>
 #include<QColor>
 #include<QJsonDocument>
 #include<QJsonObject>
 #include<QDebug>
+#include<QRect>
+#include<QHash>
+#include<QPair>
 namespace{
+
+using NodeIdSet = QSet<qint64>;
+struct TreeNode{
+    qint64 pid;
+    qint64 id;
+    QPoint absolutePos;
+    QPoint refParentPos;
+};
+
+
+TreeNode nil{0};
+QHash<qint64,TreeNode*> nodes{{{0},{&nil}}};
+QHash<qint64,NodeIdSet> parentToChildren;
+
+
+void calc(const QHash<qint64,NodeIdSet>& parentToChild
+          ,qint64 nid,QPoint parentAbsPos){
+    auto& node = *nodes[nid];
+    node.absolutePos = node.refParentPos+parentAbsPos;
+    for(auto cc:parentToChild[nid]){
+        calc(parentToChild,cc,node.absolutePos);
+    }
+}
+
+void calc(qint64 node){
+    auto& children = parentToChildren[node];
+    for(auto itr = children.begin();itr!=children.end();++itr){
+        calc(parentToChildren,*itr,nodes[node]->absolutePos);
+    }
+}
+
+void reDistanceWithParent(qint64 nid,QPoint distance){
+    if(nid==0)return;
+    if(distance.x()==0&&distance.y()==0)return;
+    auto& node = *nodes[nid];
+    node.refParentPos = distance;
+    node.absolutePos = nodes[node.pid]->absolutePos+distance;
+    calc(nid);
+}
+
+void refreshIndex(){
+    for(auto itr=nodes.begin();itr!=nodes.end();++itr){
+        auto& node = **itr;
+        parentToChildren[node.pid]<<node.id;
+    }
+}
+
+
+void calc(){
+    calc(0);
+}
+
 
 }
 static int testJson(){
