@@ -94,7 +94,8 @@ int testEtc(QApplication& app){
 }
 int testPaint(QApplication& app){
     // 创建一个 QImage 对象，指定大小和格式
-    QImage image(400, 300, QImage::Format_ARGB32);
+    //QImage image(400, 300, QImage::Format_ARGB32);
+    QImage image(400,300,QImage::Format_Grayscale8);
     image.fill(Qt::white); // 使用白色填充背景
 
     // 创建一个 QPainter 对象，并绑定到 QImage 上

@@ -1,4 +1,6 @@
 #include<fr3xml.h>
+#include<QSharedPointer>
+#include<QStack>
 namespace {
 
 QDebug &operator<<(QDebug& stream,const Dataset& t) {
@@ -22,7 +24,7 @@ static bool testPainter(){
     return testing;
 }
 
-static bool xmlTest(){
+static bool xmlTest1(){
 
     QFile file(":/template/AAAPosTicket.fr3");
     const auto res = file.open(QIODevice::ReadOnly);
@@ -41,6 +43,99 @@ static bool xmlTest(){
     qDebug()<<desc.sortedFooters;
     return testing;
 }
+static void testXmlNode(XmlNode& root){
+
+    auto* p = findFirstChildNodeByTag(root,"TfrxReportPage");
+    auto* p1 = findFirstChildNodeByTag(*p,"TfrxReportTitle");
+    auto* p3 = findChildNodeByTagAndIndex(*p1,"TfrxMemoView",1);
+    qDebug()<< p3->attris["Name"];
+}
+static bool xmlTest(){
+    QFile file(":/template/AAAPosTicket.fr3");
+    const auto res = file.open(QIODevice::ReadOnly);
+    if(!res){
+        qDebug() << "open file error:" << file.fileName();
+        return testing;
+    }
+    QXmlStreamReader xml(&file);
+    XmlNode root;
+    if(!readFr3(xml,root)){
+          qDebug() << "read xml error:" << file.fileName();
+        return testing;
+    }
+    testXmlNode(root);
+    return testing;
+}
+bool readFr3(QXmlStreamReader& xml,XmlNode&root){
+    int deep;
+    QStack<XmlNode*> stack;
+    while(!xml.atEnd()){
+        auto item = xml.readNext();
+        switch(item){
+            case QXmlStreamReader::NoToken:{
+
+            }break;
+            case QXmlStreamReader::Invalid:{
+
+            }break;
+            case QXmlStreamReader::StartDocument:{
+            }break;
+            case QXmlStreamReader::EndDocument:{
+
+            }break;
+            case QXmlStreamReader::StartElement:{
+
+                deep++;
+                XmlNode* cur;
+                if(!stack.isEmpty()){
+                    auto created = QSharedPointer<XmlNode>(new XmlNode);
+                    stack.top()->children<<created;
+                    cur = created.data();
+                }else{
+                    cur = &root;
+                }
+                auto attrs = xml.attributes();
+                for(const auto& attr:attrs){
+                    const auto key = attr.name().toString();
+                    const auto value = attr.value().toString();
+                    cur->attris[key]=value;
+                }
+                cur->tagName = xml.name().toString();
+                cur->text = xml.text().toString();
+                stack.push(cur);
+            }break;
+            case QXmlStreamReader::EndElement:{
+                deep--;
+                stack.pop();
+
+            }break;
+            case QXmlStreamReader::Characters:{
+
+            }break;
+            case QXmlStreamReader::Comment:{
+
+            }break;
+            case QXmlStreamReader::DTD:{
+
+            }break;
+            case QXmlStreamReader::EntityReference:{
+
+            }break;
+            case QXmlStreamReader::ProcessingInstruction:{
+
+            }break;
+            default:{
+                qDebug() << "unknown";
+            }
+        }
+
+    }
+    if(xml.hasError()){
+        return false;
+    }
+    return true;
+
+}
 bool readFr3(QXmlStreamReader& xml,PagePrintDesc&desc){
     int deep;
     bool inDatasets = false;
@@ -50,6 +145,8 @@ bool readFr3(QXmlStreamReader& xml,PagePrintDesc&desc){
     bool inFooter = false;
     QList<Dataset>& datasets = desc.datasets;
     QString preTagName;
+    XmlNode root;
+    XmlNode* parent=nullptr;
     while(!xml.atEnd()){
         auto item = xml.readNext();
         switch(item){
@@ -60,16 +157,30 @@ bool readFr3(QXmlStreamReader& xml,PagePrintDesc&desc){
 
         }break;
         case QXmlStreamReader::StartDocument:{
-
+                qDebug()<< "StartDoc:"<<xml.name();
         }break;
         case QXmlStreamReader::EndDocument:{
 
         }break;
         case QXmlStreamReader::StartElement:{
-
-            auto eleName = xml.name();
             deep++;
-            qDebug() << "TAG:" << eleName;
+            XmlNode* cur;
+            if(!parent){
+                cur = &root;
+            }else{
+                auto created = QSharedPointer<XmlNode>(new XmlNode);
+                parent->children<<created;
+                cur = created.data();
+            }
+            auto attrs = xml.attributes();
+            for(const auto& attr:attrs){
+                const auto key = attr.name().toString();
+                const auto value = attr.value().toString();
+                cur->attris[key]=value;
+            }
+            cur->tagName = xml.name().toString();
+            cur->text = xml.text().toString();
+            auto eleName = xml.name();
 
             if(eleName=="Datasets"){
                 inDatasets = true;
@@ -139,6 +250,7 @@ bool readFr3(QXmlStreamReader& xml,PagePrintDesc&desc){
                     desc.sortedFooters<<item;
                 }
             }
+            parent = cur;
         }break;
         case QXmlStreamReader::EndElement:{
             auto eleName = xml.name().toString();
@@ -197,6 +309,58 @@ bool readFr3(QXmlStreamReader& xml,PagePrintDesc&desc){
 
 bool testEtc(){
 
-    return testPainter();
+    QString msg = "[B.&#34;shangpname&#34;]";
+    qDebug()<< msg.replace("[B.","").replace("&#34;","").replace("]","");
+    return testing;
+    return xmlTest();
+    //return testPainter();
 }
+
+XmlNode* findChildNodeByTagAndAttr(XmlNode& node,QString tag,QString key,QString val){
+    for(auto shared:node.children){
+        if(shared->tagName==tag
+                &&shared->attris.contains(key)
+                &&shared->attris[key]==val){
+            return shared.data();
+        }
+    }
+    return nullptr;
+}
+
+
+XmlNode* findChildNodeByTagAndIndex(XmlNode& node,QString tag,int index){
+    if(index<0||node.children.size()<index)return nullptr;
+    int i=0;
+    for(auto shared:node.children){
+        if(shared->tagName==tag){
+            if(i==index){
+                 return shared.data();
+            }
+            i++;
+        }
+    }
+     return nullptr;
+}
+XmlNode* findFirstChildNodeByTag(XmlNode& node,QString tag){
+    return findChildNodeByTagAndIndex(node,tag,0);
+}
+XmlNode* findChildNodeByAttr(XmlNode& node,QString key,QString val){
+    for(auto shared:node.children){
+        if(shared->attris.contains(key)
+                &&shared->attris[key]==val){
+            return shared.data();
+        }
+    }
+    return nullptr;
+}
+QList<XmlNode*> findChildrenByTag(XmlNode& node,QString tag){
+    QList<XmlNode*> list;
+    for(auto shared:node.children){
+        if(shared->tagName==tag){
+            list<<shared.data();
+        }
+    }
+    return list;
+}
+
 

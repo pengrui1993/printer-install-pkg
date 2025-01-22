@@ -9,6 +9,16 @@
 #include <QList>
 #include <QSharedPointer>
 #include <QMap>
+#include<QSharedPointer>
+struct XmlNode{
+    QString tagName;
+    QString text;
+    QMap<QString,QString> attris;
+    QList<QSharedPointer<XmlNode>> children;
+};
+
+
+
 struct Item{
     QString tagName;//TfrxHeader|TfrxFooter |TfrxMemoView|TfrxReportTitle
     QString DataSetName; //A|B
@@ -34,5 +44,12 @@ struct PagePrintDesc{
     QList<Item> sortedDatas;//TfrxMasterData
     QList<Item> sortedFooters;//TfrxFooter
 };
+QList<XmlNode*> findChildrenByTag(XmlNode& node,QString tag);
+XmlNode* findChildNodeByTagAndAttr(XmlNode& node,QString tag,QString key,QString val);
+XmlNode* findChildNodeByAttr(XmlNode& node,QString key,QString val);
+XmlNode* findChildNodeByTagAndIndex(XmlNode& node,QString tag,int index);
+XmlNode* findFirstChildNodeByTag(XmlNode& node,QString tag);
+
 bool readFr3(QXmlStreamReader& xml,PagePrintDesc&desc);
+bool readFr3(QXmlStreamReader& xml,XmlNode&root);
 #endif // FR3XML_H

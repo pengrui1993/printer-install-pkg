@@ -14,61 +14,221 @@ MyRequestHandler::MyRequestHandler(QObject* parent)
     // empty
 }
 
-static void doUsePrinter(){
-    QPrinterInfo info;
-    QMap<QString,QJsonArray> DataSetNameToFieldArray;// A -> [{}]   B ->[{ }]
-    QMap<QString,QJsonArray> DataSetNameToDataArray;
-    PagePrintDesc desc;
+static void doUsePrinter(QPrinterInfo& info
+                         , QMap<QString,QJsonArray>& DataSetNameToFieldArray
+                         ,QMap<QString,QJsonArray>& DataSetNameToDataArray
+                         ,XmlNode& desc
+                         ){
 
-    QPainter p;
-    QList<QList<Item>> lists;
-    //TODO
-    lists<<desc.sortedTitles<<desc.sortedHeaders<<desc.sortedDatas<<desc.sortedFooters;
-    QImage img;
-    for(auto& sorted:lists){
-        QPoint leftTop;
-        for(auto item :sorted){
-            auto dsn = item.DataSetName;// A B
-            bool use = false;
-            for (auto field:DataSetNameToFieldArray[dsn]){
-                if(!field.isObject()){
-                    qDebug()<< "error on title.field";
-                    return;
-                }
-                auto obj = field.toObject();
-                auto refField = obj["name"];
-                if(refField.isNull()){
-                    continue;
-                }
-                if(item.DataField==refField.toString()){
-                    use= true;
-                    break;
-                }
-            }
-            QRect place(item.left,item.top,item.width,item.height);
 
-            for(auto data: DataSetNameToDataArray[dsn]){
-                if(!data.isObject()){
-                    qDebug()<< "error on title.data";
-                    return;
-                }
-                auto obj = data.toObject();
-                for(auto& key:obj.keys()){
-                    auto val = obj[key];
-                    if(item.tagName=="TfrxMasterData"){
-                        leftTop.setY(100);
-                    }
-                    if(key==item.DataField&&val.isString()){
-                        p.drawText(place,val.toString());
-                    }
-                }
+    //QMap<QString,QJsonArray> DataSetNameToFieldArray;// A -> [{}]   B ->[{ }]
+    //QMap<QString,QJsonArray> DataSetNameToDataArray;
+    //XmlNode desc;
+
+
+    auto reportPage = findFirstChildNodeByTag(desc,"TfrxReportPage");
+    if(!reportPage){
+        qDebug()<<"no found TfrxReportPage tag";
+        throw 1;
+    }
+    auto datasets = findFirstChildNodeByTag(desc,"Datasets");
+    auto title = findFirstChildNodeByTag(*reportPage,"TfrxReportTitle");
+    auto data = findFirstChildNodeByTag(*reportPage,"TfrxMasterData");
+    auto header = findFirstChildNodeByTag(*reportPage,"TfrxHeader");
+    auto footer = findFirstChildNodeByTag(*reportPage,"TfrxFooter");
+    if(!title||!data||!header||!footer||!datasets){
+        qDebug()<<"no found Datasets|TfrxReportTitle|TfrxMasterData|TfrxHeader|TfrxFooter tag";
+        throw 2;
+    }
+
+    auto items = findChildrenByTag(*datasets,"item");
+    QSet<QString> DataSetNames;
+    for(auto& item:items){
+        if(item){
+            auto val = item->attris["DataSetName"];
+            if(!val.isEmpty()){
+                DataSetNames<<val;
             }
         }
     }
+
+    auto memo0 = findChildrenByTag(*title,"TfrxMemoView");
+    try{
+        std::sort(memo0.begin(),memo0.end(),[](XmlNode* l,XmlNode* r){
+            if(!l->attris.contains("Top")
+                    ||!r->attris.contains("Top"))
+                throw 1;
+            bool f,g;
+            auto ln = l->attris["Top"].toDouble(&f);
+            auto rn = r->attris["Top"].toDouble(&g);
+            if(!f||!g){
+                throw 2;
+            }
+            return ln < rn;
+        });
+    }catch(...){
+        qDebug()<<"error on sort by top attribute";
+        throw 3;
+    }
     QPrinter printer(info,QPrinter::HighResolution);
-    if(p.begin(&printer)){
-        p.drawImage(0,0,img);
-        p.end();
+    //print title
+    for(auto* p:memo0){
+        auto dsn = p->attris["DataSetName"];
+        if(dsn.isNull())continue;
+        if(!DataSetNames.contains(dsn))continue;
+        auto arr = DataSetNameToFieldArray[dsn];
+        if(arr.isEmpty())continue;
+        auto dat = DataSetNameToDataArray[dsn];
+        if(dat.isEmpty())continue;
+        //DataField     name
+        auto nameField = p->attris["DataField"];
+        if(nameField.isNull())continue;
+        auto itr = std::find_if(arr.begin(),arr.end(),[=](QJsonValue ele){
+            if(!ele.isObject())return false;
+            auto obj = ele.toObject();
+            return obj.contains("name") && obj["name"].toString()==nameField;
+        });
+        if(itr==arr.end())continue;
+        auto fieldDesc = (*itr).toObject();
+        auto require = fieldDesc.contains("required")&&fieldDesc["required"].isBool()&&fieldDesc["required"].toBool();
+
+        QPainter painter;
+        for(auto dataJson:dat){
+            if(!dataJson.isObject())continue;
+            auto obj = dataJson.toObject();
+            auto dataHasField = obj.contains(nameField);
+            if(require&&!dataHasField){
+                qDebug()<<"field required but data no containes,"<<nameField;
+                return;
+            }
+            if(!dataHasField)continue;
+            if(painter.begin(&printer)){
+                painter.drawText(
+                            QRect(p->attris["Top"].toDouble()
+                                ,p->attris["Left"].toDouble()
+                                ,p->attris["Width"].toDouble()
+                                ,p->attris["Height"].toDouble()
+                            )
+                        ,obj[nameField].toString());
+                //painter.drawImage(0,0,img);
+                painter.end();
+            }
+        }
+    }
+    QImage headerImage;    //print header //TODO
+    QPainter painter(&headerImage);
+    for(auto* p:findChildrenByTag(*header,"TfrxMemoView")){
+        QPainter painter(&headerImage);
+        auto text = p->attris["Text"];//商品名称
+        painter.drawText(
+                    QRect(
+                        p->attris["Top"].toDouble()
+                        ,p->attris["Left"].toDouble()
+                        ,p->attris["Width"].toDouble()
+                        ,p->attris["Height"].toDouble()
+                    )
+                ,text);
+    }
+    if(painter.begin(&printer)){
+        painter.drawImage(0,0,headerImage);
+        painter.end();
+    }
+
+    //print data
+    if(data->attris.contains("DataSetName")){//TODO
+        auto dsn = data->attris["DataSetName"];
+        if(!dsn.isNull()&&DataSetNames.contains(dsn)&&DataSetNameToFieldArray.contains(dsn)){
+            auto dat = DataSetNameToDataArray[dsn];
+            auto fie = DataSetNameToFieldArray[dsn];
+            for(auto dataJson:dat){
+                if(!dataJson.isObject())continue;
+                QImage img;
+                QPainter painter(&img);
+                for(auto* p:findChildrenByTag(*data,"TfrxMemoView")){
+                    auto fdsn = p->attris["DataSetName"];
+                    if(!fdsn.isNull()&&fdsn==dsn)continue;
+                    auto nameField = p->attris["DataField"];
+                    if(nameField.isNull())continue;
+                    auto itr = std::find_if(fie.begin(),fie.end(),[=](QJsonValue ele){
+                        if(!ele.isObject())return false;
+                        auto obj = ele.toObject();
+                        return obj.contains("name")&&obj["name"].toString()==nameField;
+                    });
+                    if(itr==fie.end())continue;
+                    auto fieldDesc = (*itr).toObject();
+                    auto require = fieldDesc.contains("required")&&fieldDesc["required"].isBool()&&fieldDesc["required"].toBool();
+                    auto obj = dataJson.toObject();
+                    auto dataHasField = obj.contains(nameField);
+                    if(require&&!dataHasField){
+                        qDebug()<<"field required but data no containes,"<<nameField;
+                        continue;
+                    }
+                    painter.drawText(
+                                QRect(
+                                    p->attris["Top"].toDouble()
+                                    ,p->attris["Left"].toDouble()
+                                    ,p->attris["Width"].toDouble()
+                                    ,p->attris["Height"].toDouble()
+                                )
+                            ,obj[nameField].toString());
+                }
+                if(painter.begin(&printer)){//TODO
+                    painter.drawImage(0,0,img);
+                    painter.end();
+                }
+            }
+
+        }
+
+    }
+
+    //print footer
+    for(auto* p:findChildrenByTag(*footer,"TfrxMemoView")){
+        auto dsn = p->attris["DataSetName"];
+        if(dsn.isNull())continue;
+        if(!DataSetNames.contains(dsn))continue;
+        auto arr = DataSetNameToFieldArray[dsn];
+        if(arr.isEmpty())continue;
+        auto dat = DataSetNameToDataArray[dsn];
+        if(dat.isEmpty())continue;
+        auto nameField = p->attris["DataField"];
+        if(nameField.isNull())continue;
+        auto itr = std::find_if(arr.begin(),arr.end(),[=](QJsonValue ele){
+            if(!ele.isObject())return false;
+            auto obj = ele.toObject();
+            return obj.contains("name")
+                    &&obj["name"].toString()==nameField
+                    ;
+        });
+        if(itr==arr.end())continue;
+        auto fieldDesc = (*itr).toObject();
+        auto require = fieldDesc.contains("required")&&fieldDesc["required"].isBool()&&fieldDesc["required"].toBool();
+        QPainter painter;
+        auto text = p->attris["Text"];//已优惠金额：[A.&#34;yhje&#34;]
+        for(auto dataJson:dat){
+            if(!dataJson.isObject())continue;
+            auto obj = dataJson.toObject();
+            auto dataHasField = obj.contains(nameField);
+            if(require&&!dataHasField){
+                qDebug()<<"field required but data no containes,"<<nameField;
+                continue;
+            }
+            QString tpl = "["+dsn+".&#34;"+nameField+"&#34;]";
+            QString holerMessage = text.replace(tpl,obj[nameField].toString());
+            if(!dataHasField)continue;
+            if(painter.begin(&printer)){
+                painter.drawText(
+                            QRect(
+                                p->attris["Top"].toDouble()
+                                ,p->attris["Left"].toDouble()
+                                ,p->attris["Width"].toDouble()
+                                ,p->attris["Height"].toDouble()
+                            )
+                        ,holerMessage);
+
+                painter.end();
+            }
+        }
     }
 }
 
@@ -136,7 +296,7 @@ static void handlePrinterRequest(MyRequestHandler& handler
         }
         qDebug()<<"打印设备名：" <<printerName;
         auto& info = *itr;
-        bool test = true;
+        bool test = false;
         if(test){
             QPrinter printer(info,QPrinter::HighResolution);
             QPainter p;
@@ -152,7 +312,7 @@ static void handlePrinterRequest(MyRequestHandler& handler
             return;
         }
 
-        auto templateName = root["ReportName"];//TODO
+        auto templateName = root["ReportName"];
         QFile file("template/"+templateName.toString());
         if(!file.exists()){
             QJsonObject obj;
@@ -179,7 +339,7 @@ static void handlePrinterRequest(MyRequestHandler& handler
             QJsonDocument doc(obj);
             rsp.write(doc.toJson(),true);
         };
-        PagePrintDesc desc;
+        XmlNode desc;
         try{
             QXmlStreamReader xmlReader(&file);
             if(!readFr3(xmlReader,desc)){
@@ -191,6 +351,7 @@ static void handlePrinterRequest(MyRequestHandler& handler
             parseXmlFailPost();
             return;
         }
+        file.close();
         QMap<QString,QJsonArray> DataSetNameToFieldArray;
         QMap<QString,QJsonArray> DataSetNameToDataArray;
         try{
@@ -218,7 +379,7 @@ static void handlePrinterRequest(MyRequestHandler& handler
             return;
         }
         try{
-            doUsePrinter();//TODO
+            doUsePrinter(info,DataSetNameToFieldArray,DataSetNameToDataArray,desc);
         }catch(...){
             qDebug()<<"call printer error" << root;
             QJsonObject obj;

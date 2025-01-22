@@ -25,6 +25,7 @@ SOURCES += \
     loghandler.cpp \
     main.cpp \
     mainwindow.cpp \
+    painttest.cpp \
     xml.cpp
 
 HEADERS += \
