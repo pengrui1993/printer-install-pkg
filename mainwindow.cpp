@@ -184,6 +184,7 @@ void MainWindow::on_pushButton_clicked()
                    ;
     }
     if(!started){
+        started = true;
         bool isInt;
         auto port = ui->lineEdit->text().toInt(&isInt);
         if(isInt){
@@ -198,11 +199,13 @@ void MainWindow::on_pushButton_clicked()
                     ui->lineEdit->setDisabled(true);
                     ui->pushButton->setText("关闭");
                 }else{
+                    started = false;
                     delete handler;
                     delete listener;
                     QMessageBox::information(this,"title","端口已占用1");
                 }
             }else{
+                 started = false;
                 QMessageBox::information(this,"title","端口已占用2");
             }
         }

@@ -255,15 +255,7 @@ static void doUsingPrinter(QPrinterInfo& info
                     painter.end();
                 }
             }
-            if(false){
-                if(!label){
-                    label = QSharedPointer<QLabel>(new QLabel);
-                }
-                if(label){
-                    label->setPixmap(QPixmap::fromImage(img));
-                    label->show();
-                }
-            }
+
         }
     }
 
@@ -420,6 +412,62 @@ static void handlePrinterRequest(MyRequestHandler& handler
         const auto bytes = doc.toJson(QJsonDocument::Compact);
 
         rsp.write( bytes,true);
+    }else if(method=="printreport-base64-img"){
+        auto printerName = root["PrinterName"];//
+        auto base64Image = root["base64Image"];//
+        if(printerName.isNull()
+                ||base64Image.isNull()
+                ||!base64Image.isString()
+                ||!base64Image.toString().startsWith("data:")){
+            QJsonObject obj;
+            obj["status"] = "error";
+            obj["data"] = "PrinterName|base64Image invalid ";
+            QJsonDocument doc(obj);
+            rsp.write(doc.toJson(),true);
+            return;
+        }
+
+        qDebug()<< base64Image;
+        auto infos = QPrinterInfo::availablePrinters();
+        auto itr = std::find_if(infos.begin(),infos.end(),[=](QPrinterInfo& info){
+            return info.printerName()==printerName.toString();
+        });
+        if(itr==infos.end()){
+            QJsonObject obj;
+            obj["status"] = "error";
+            obj["data"] = "PrinterName 打印设备"+printerName.toString();
+            QJsonDocument doc(obj);
+            rsp.write(doc.toJson(),true);
+            return;
+        }
+        qDebug()<<"打印设备名：" <<printerName;
+        auto& info = *itr;
+        auto rowBase64 = base64Image.toString().split(";base64,")[1];
+        if(true){
+            QPixmap image;
+            image.loadFromData(QByteArray::fromBase64(rowBase64.toLocal8Bit()));
+            if(!label){
+                label = QSharedPointer<QLabel>(new QLabel);
+            }
+            if(label){
+                QImage img = image.toImage();
+                img.setDotsPerMeterX(100);
+                img.setDotsPerMeterX(100);
+                label->setPixmap(QPixmap::fromImage(image.toImage()));
+                label->show();
+            }
+            return;
+        }
+        QPrinter printer(info,QPrinter::HighResolution);
+        QPainter p;
+        p.setRenderHint(QPainter::Antialiasing);
+        if(p.begin(&printer)){
+            QPixmap image;
+            image.loadFromData(QByteArray::fromBase64(rowBase64.toLocal8Bit()));
+            p.drawImage(QPoint(0,0),image.toImage());
+            p.end();
+        }
+
     }else if(method=="printreport"){
         qDebug() << root;
 
