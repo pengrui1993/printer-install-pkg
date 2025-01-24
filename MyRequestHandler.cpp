@@ -443,7 +443,7 @@ static void handlePrinterRequest(MyRequestHandler& handler
         qDebug()<<"打印设备名：" <<printerName;
         auto& info = *itr;
         auto rowBase64 = base64Image.toString().split(";base64,")[1];
-        if(true){
+        if(false){
             QPixmap image;
             image.loadFromData(QByteArray::fromBase64(rowBase64.toLocal8Bit()));
             if(!label){
@@ -451,9 +451,9 @@ static void handlePrinterRequest(MyRequestHandler& handler
             }
             if(label){
                 QImage img = image.toImage();
-                img.setDotsPerMeterX(100);
-                img.setDotsPerMeterX(100);
-                label->setPixmap(QPixmap::fromImage(image.toImage()));
+//                img.setDotsPerMeterX(880);
+//                img.setDotsPerMeterX(880);
+                label->setPixmap(QPixmap::fromImage(img));
                 label->show();
             }
             return;

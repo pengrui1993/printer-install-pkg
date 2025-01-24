@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_2" pageWidth="384" whenNoDataType="NoPages" columnWidth="384" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="a1f690a3-5977-4467-85f8-6b0bcd5b7210">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="title" class="java.lang.String"/>
+	<parameter name="subTitle" class="java.lang.String"/>
+	<parameter name="deskName" class="java.lang.String"/>
+	<parameter name="orderNo" class="java.lang.String"/>
+	<parameter name="operator" class="java.lang.String"/>
+	<parameter name="startTime" class="java.lang.String"/>
+	<parameter name="shouldFee" class="java.lang.String"/>
+	<parameter name="favorMoney" class="java.lang.String"/>
+	<parameter name="realFee" class="java.lang.String"/>
+	<parameter name="consumingNo" class="java.lang.String"/>
+	<queryString language="JSON">
+		<![CDATA[]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<property name="net.sf.jasperreports.json.field.expression" value="id"/>
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="orderId" class="java.lang.Long">
+		<property name="net.sf.jasperreports.json.field.expression" value="orderId"/>
+		<fieldDescription><![CDATA[orderId]]></fieldDescription>
+	</field>
+	<field name="itemId" class="java.lang.String">
+		<property name="net.sf.jasperreports.json.field.expression" value="itemId"/>
+		<fieldDescription><![CDATA[itemId]]></fieldDescription>
+	</field>
+	<field name="label" class="java.lang.String">
+		<property name="net.sf.jasperreports.json.field.expression" value="label"/>
+		<fieldDescription><![CDATA[label]]></fieldDescription>
+	</field>
+	<field name="price" class="java.lang.Double">
+		<property name="net.sf.jasperreports.json.field.expression" value="price"/>
+		<fieldDescription><![CDATA[price]]></fieldDescription>
+	</field>
+	<field name="num" class="java.lang.Double">
+		<property name="net.sf.jasperreports.json.field.expression" value="num"/>
+		<fieldDescription><![CDATA[num]]></fieldDescription>
+	</field>
+	<field name="img" class="java.lang.String">
+		<property name="net.sf.jasperreports.json.field.expression" value="img"/>
+		<fieldDescription><![CDATA[img]]></fieldDescription>
+	</field>
+	<field name="imgUrl" class="java.lang.String">
+		<property name="net.sf.jasperreports.json.field.expression" value="imgUrl"/>
+		<fieldDescription><![CDATA[imgUrl]]></fieldDescription>
+	</field>
+	<field name="totalPrices" class="java.lang.Double">
+		<property name="net.sf.jasperreports.json.field.expression" value="totalPrices"/>
+		<fieldDescription><![CDATA[totalPrices]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="203" splitType="Stretch">
+			<textField>
+				<reportElement x="17" y="10" width="355" height="30" uuid="be8e25e3-20b9-49e2-a2c4-def1cb71c306"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="17" y="42" width="355" height="30" uuid="a85c62ec-ebbb-4ce5-8bcf-dbe28d66e0d0"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{subTitle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="15" y="76" width="356" height="30" uuid="36eb95fa-c4e1-4935-83ef-f265c5a5c6e7"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{deskName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="109" width="380" height="30" uuid="2b590e08-80c1-44cd-ba14-8cb6d97ed993">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{orderNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="142" width="380" height="30" uuid="ee533491-232f-4bc7-bd74-01effc9f3a92">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{operator}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="173" width="380" height="30" uuid="ae7911ef-fe4f-4306-80b5-843ba5219e49">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{startTime}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="44" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="15" y="37" width="359" height="1" uuid="544e89f7-0fd1-4142-aa23-e335e3be7007"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="27" y="6" width="53" height="30" forecolor="#000000" uuid="01472de4-0d21-4c1c-880f-054e20eed1a0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[商品]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="6" width="70" height="31" uuid="9777c187-2e12-47b3-8825-549d23069def"/>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="6" width="80" height="32" uuid="09989f8f-8241-4bd1-a16e-34c9cd43ecec"/>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[金额]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="43" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="9" y="4" width="364" height="1" uuid="cb229859-ab9a-4aa3-afa2-84439642f4ee"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="130" y="10" width="100" height="30" forecolor="#000000" uuid="d5c45863-0df6-497a-b2ee-32b72e3bc3f6">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="17" y="10" width="102" height="30" forecolor="#050000" uuid="31139e5c-4682-48fc-9034-77fd5ec565fb">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{label}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="10" width="154" height="30" forecolor="#000000" uuid="a37fd705-08f3-46fb-a10a-2aa9823b3d78">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalPrices}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="157" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="11" y="10" width="349" height="1" uuid="401e0e59-de38-4dd2-8257-418cb489177c"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField pattern="yyyy-MM-dd HH:mm:ss">
+				<reportElement style="Column header" x="115" y="113" width="248" height="24" forecolor="#050000" uuid="5a79d2a0-bcde-4ad5-adf0-c4eb2066f6dd"/>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="112" width="100" height="30" uuid="f9031c7f-07e1-44ba-8218-60aba509d260">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[打单时间:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="13" width="100" height="30" uuid="4f70e6ca-9556-4df7-b8d9-e3ea1f8663cd">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[应收金额：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="46" width="100" height="30" uuid="5c0df3cf-f4ab-4713-b3c6-ec2add790ae0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[优惠金额：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="80" width="100" height="30" uuid="0868e675-7282-4042-ac05-75866543c361">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[实结金额：]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="14" width="200" height="30" uuid="b2bd4004-19ff-45a2-8746-f7804bd8c410">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{shouldFee}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="46" width="200" height="30" uuid="afefcf5a-83e1-455a-84ee-1df8047d026b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{favorMoney}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="80" width="200" height="30" uuid="3d0d9f7d-8aaa-4c77-9695-994cfe204c34">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="宋体" size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{realFee}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

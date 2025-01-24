@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     setting.setValue("listener/maxThreads","5");
     setting.setValue("listener/cleanupInterval","60000");
     setting.setValue("listener/readTimeout","6000");
-    setting.setValue("listener/maxRequestSize","16000");
+    setting.setValue("listener/maxRequestSize","10000000");
     setting.setValue("listener/maxMultiPartSize","10000000");
     setting.sync();
     //initDoc(setting);
