@@ -27,6 +27,28 @@ static void pdfToImage(QPdfDocument& pd){
     }
 
 }
+static int showPdf(QApplication&app,QImage&image){
+    QLabel label;
+    label.setPixmap(QPixmap::fromImage(image));
+    label.show();
+    return app.exec();
+}
+static int showDemo(QApplication&app){
+    QPdfDocument pd;
+    QFile f("/Users/pengrui/workspace/buss-store/tmp/report_output.pdf");
+    f.open(QFile::ReadOnly);
+    pd.load(&f);
+    f.close();
+    if(pd.pageCount()<1){
+        qDebug()<<"no pdf page";
+        return quit;
+    }
+    auto size = pd.pagePointSize(0).toSize();
+    QImage img = pd.render(0, size);
+    auto res= showPdf(app,img);
+    return res;
+
+}
 static void mergePDFs(const QStringList& fileList, const QString& outputFileName) {
     QPdfWriter pdfWriter(outputFileName);
     pdfWriter.setResolution(150);
