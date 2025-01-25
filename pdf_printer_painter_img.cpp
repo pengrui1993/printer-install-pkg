@@ -9,7 +9,8 @@
 #include <QPdfDocumentRenderOptions>
 #include <QPainter>
 #include <QPrinter>
-
+#include <QLabel>
+#include<QApplication>
 static void pdfToImage(QPdfDocument& pd){
     auto info =QPrinterInfo::availablePrinters()[0];
     QPrinter printer(info,QPrinter::HighResolution);
@@ -57,4 +58,25 @@ static void mergePDFs(const QStringList& fileList, const QString& outputFileName
         pdfDocument.close();
     }
     painter.end();
+}
+
+static int renderPdf(QApplication&app){
+    QString filePath("/Users/pengrui/workspace/java/java-code-etc/out/report_output.pdf");
+    QImage img(400,300,QImage::Format_Grayscale16);
+
+    QPainter painter(&img);
+
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setCreator("");
+    printer.setOutputFileName(filePath);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    //render(&painter);
+    painter.end();
+
+    // 显示 QImage 内容到一个 QLabel 上
+    QLabel label;
+    label.setPixmap(QPixmap::fromImage(img));
+    label.show();
+    return app.exec();
 }
